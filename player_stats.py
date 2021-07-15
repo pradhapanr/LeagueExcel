@@ -1,7 +1,7 @@
 #DEFINITELY IMPLEMENT
 
-# rank
-# role
+# rank (CANT IMPLEMENT ACTUALLY CANT TRACK)
+# role 
 # champion
 # result
 # kills
