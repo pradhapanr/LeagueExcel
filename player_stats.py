@@ -19,7 +19,7 @@
 # TOTAL stats(champs played total, champ stats, average kdas? etc... maybe on seperate page but same file if possible?
 
 class PlayerStats:
-    def __init__(self, role, champion, victory, kills, deaths, assists, kda, time_float, time_string, cs_total, cs_per_min, champ_physical_damage, champ_magic_damage, gold):
+    def __init__(self, role, champion, victory, kills, deaths, assists, kda, time_float, time_string, cs_total, cs_per_min, champ_physical_damage, champ_magic_damage, champ_true_damage, champ_total_damage, gold):
         self.role = role
         self.champion = champion
         self.victory = victory
@@ -33,6 +33,8 @@ class PlayerStats:
         self.cs_per_min = cs_per_min
         self.champ_physical_damage = champ_physical_damage
         self.champ_magic_damage = champ_magic_damage
+        self.champ_true_damage = champ_true_damage
+        self.champ_total_daamge = champ_total_damage
         self.gold = gold
 
     def __repr__(self):
@@ -48,8 +50,10 @@ class PlayerStats:
             f"Time (string): {self.time_string}\n"
             f"Total CS: {self.cs_total}\n"
             f"CS per min: {self.cs_per_min}\n"
-            f"Total Physical Champion Damage: {self.champ_physical_damage}\n"
-            f"Total Magic Champion Damage: {self.champ_magic_damage}\n"
+            f"Physical Damage to Champions: {self.champ_physical_damage}\n"
+            f"Magic Damage to Champions: {self.champ_magic_damage}\n"
+            f"True Damage to Champions: {self.champ_true_damage}\n"
+            f"Total Champion Damage: {self.champ_total_damage}\n"
             f"Gold: {self.gold}\n"
         )
         
