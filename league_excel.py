@@ -62,7 +62,9 @@ def main():
 
     riot_tracker = RiotTracker(api_key)
 
-    match_list = riot_tracker.get_match_history(name, 10)
+    puuid = riot_tracker.get_puuid(name)
+
+    match_list = riot_tracker.get_match_history(puuid, 10)
 
     file_list = os.listdir(".")
     print(file_list)

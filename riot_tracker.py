@@ -33,12 +33,11 @@ class RiotTracker:
     #MATCH V4 API
     #LINK https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/oCDXwBo6DGlaVluiTgAlqHMyGfX1Tc3JVHUDKe1okjq0MjH2pd92VRG7?queue=420&api_key=RGAPI-dececa22-beb5-49cc-8328-ce88debcccd9
     
-    def get_match_history(self, name, num_games):
-        account_id = self.get_acconut_id(name)
-        match_list = requests.get("https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/" + account_id + "?queue=420&api_key=" + self.api_key).json()
+    def get_match_history(self, puuid, num_games):
+        match_list = requests.get(f"https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?type=ranked&start=0&count={num_games}&api_key={self.api_key}").json()
         print(match_list)
         return match_list
 
     def get_match(self, match_id):
-        match_dict = requests.get("https://na1.api.riotgames.com/lol/match/v4/matches/" + match_id + "?api_key=" + self.api_key).json()
+        match_dict = requests.get(f"https://americas.api.riotgames.com/lol/match/v5/matches/{match_id}?api_key={self.api_key}").json()
         return match_dict
