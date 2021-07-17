@@ -1,6 +1,7 @@
 from riot_tracker import RiotTracker
 from player_stats import PlayerStats
 from openpyxl import Workbook
+from openpyxl.styles import Border, Side, PatternFill, Font, GradientFill, Alignment
 import os
 
 def parse_match(match_dict, puuid):
@@ -35,7 +36,11 @@ def parse_match(match_dict, puuid):
 
     time_minutes = int((time_milliseconds / (1000 * 60) ) % 60)
     time_seconds = int(time_milliseconds / 1000) % 60
+
     time_string = f"{time_minutes}:{time_seconds}"
+
+    if len(str(time_seconds)) == 1:
+        time_string = time_string[:4] + "0" + time_string[4:]
 
     cs_total = player_dict["totalMinionsKilled"] + player_dict["neutralMinionsKilled"]
     cs_per_min = round(cs_total / (time_milliseconds / 60000), 1) #rounded to one decimal place
@@ -72,26 +77,58 @@ def create_layout(sheet):
     return sheet;
 
 def add_stats(sheet, player_stats: PlayerStats, row_idx: int):
+
+    # COLOR CODES
+    # GOOD = 96DE91, NEUTRAL = EBF5A7, BAD = F5A7A7
+
+    good = PatternFill("solid", fgColor="96DE91")
+    neutral = PatternFill("solid", fgColor="EBF5A7")
+    bad = PatternFill("solid", fgColor="F5A7A7")
+
     sheet.cell(row=row_idx, column=1).value = player_stats.role
     sheet.cell(row=row_idx, column=2).value = player_stats.champion
     sheet.cell(row=row_idx, column=4).value = player_stats.kills
     sheet.cell(row=row_idx, column=5).value = player_stats.deaths
     sheet.cell(row=row_idx, column=6).value = player_stats.assists
     sheet.cell(row=row_idx, column=7).value = player_stats.kda
+
+    if player_stats.kda < 2:
+        sheet.cell(row=row_idx, column=7).fill = bad
+    elif player_stats.kda >= 4: 
+        sheet.cell(row=row_idx, column=7).fill = good
+    else:
+        sheet.cell(row=row_idx, column=7).fill = neutral
+    
+
     sheet.cell(row=row_idx, column=8).value = ("Defeat", "Victory")[player_stats.victory]
+
+    if player_stats.victory:
+        sheet.cell(row=row_idx, column=8).fill = good
+    else:
+        sheet.cell(row=row_idx, column=8).fill = bad
+
     sheet.cell(row=row_idx, column=9).value = player_stats.time_string
     sheet.cell(row=row_idx, column=10).value = player_stats.cs_total
     sheet.cell(row=row_idx, column=11).value = player_stats.cs_per_min
+
+    if player_stats.cs_per_min < 6:
+        sheet.cell(row=row_idx, column=11).fill = bad
+    elif player_stats.cs_per_min >= 8:
+        sheet.cell(row=row_idx, column=11).fill = good
+    else:
+        sheet.cell(row=row_idx, column=11).fill = neutral
+
     sheet.cell(row=row_idx, column=12).value = player_stats.gold
     sheet.cell(row=row_idx, column=14).value = player_stats.champ_physical_damage
     sheet.cell(row=row_idx, column=16).value = player_stats.champ_magic_damage
     sheet.cell(row=row_idx, column=18).value = player_stats.champ_true_damage
     sheet.cell(row=row_idx, column=20).value = player_stats.champ_total_daamge
 
-
     
     
 def create_spreadsheet(riot_tracker: RiotTracker, match_list, puuid):
+    match_list.reverse()
+
     workbook = Workbook()
     sheet = workbook.active
 
@@ -105,6 +142,7 @@ def create_spreadsheet(riot_tracker: RiotTracker, match_list, puuid):
         add_stats(sheet, player_stats, row_idx)
         row_idx += 1
     
+
     workbook.save(filename="test.xlsx")
 
 
@@ -123,9 +161,6 @@ def main():
     match_list = riot_tracker.get_match_history(puuid, 10)
 
     file_list = os.listdir(".")
-    print(file_list)
-
-    print(match_list)
 
     fileFound = False
 
