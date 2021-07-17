@@ -1,16 +1,6 @@
 import requests
 import json
 
-#print(json.dumps(match_list, indent=4, sort_keys=True))
-
-#Prxd
-#accountid: oCDXwBo6DGlaVluiTgAlqHMyGfX1Tc3JVHUDKe1okjq0MjH2pd92VRG7
-#summmonerid: b9K4O2Kwtg2kI8ix_Hynqj8yPLW2Iaxn3M5tbA0noX0BZuW6
-#puuid: r5GeRXmEQwup71kg0AWJguD5hGZxsd14FXjWJjBAIepRFmWm0yjC-WQwJXUgkyx34l1v8QdtjJ7gWg
-
-
-#CHANGE TO F STRINGS BEFORE DEPLOYING
-
 class RiotTracker:
     def __init__(self, api_key):
         self.api_key = api_key
@@ -30,7 +20,7 @@ class RiotTracker:
         puuid = user_info["puuid"]
         return puuid;
 
-    #MATCH V4 API
+    #MATCH V5 API
     
     def get_match_history(self, puuid, num_games):
         match_list = requests.get(f"https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?type=ranked&start=0&count={num_games}&api_key={self.api_key}").json()

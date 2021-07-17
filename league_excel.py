@@ -126,7 +126,7 @@ def add_stats(sheet, player_stats: PlayerStats, row_idx: int):
 
     
     
-def create_spreadsheet(riot_tracker: RiotTracker, match_list, puuid):
+def create_spreadsheet(riot_tracker: RiotTracker, match_list, puuid, file_name):
     match_list.reverse()
 
     workbook = Workbook()
@@ -143,7 +143,7 @@ def create_spreadsheet(riot_tracker: RiotTracker, match_list, puuid):
         row_idx += 1
     
 
-    workbook.save(filename="test.xlsx")
+    workbook.save(filename=file_name)
 
 
 
@@ -155,6 +155,9 @@ def main():
     api_key = input("Enter Riot API Key (refer to *github link* if you don't know how to get this): ")
     name = input("Enter summoner name: ")
     file_name = input("Enter file name (if you don't have an existing one, we will automatically create one with this name): ")
+
+    if len(file_name) == 0:
+        file_name = f"{name}.xlsx"
 
     riot_tracker = RiotTracker(api_key)
     puuid = riot_tracker.get_puuid(name)
@@ -169,7 +172,7 @@ def main():
             fileFound = True
 
     if (fileFound == False):
-        create_spreadsheet(riot_tracker, match_list, puuid)
+        create_spreadsheet(riot_tracker, match_list, puuid, file_name)
     else:
         update_spreadsheet()
     
